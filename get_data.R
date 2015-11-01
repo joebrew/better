@@ -10,6 +10,7 @@ library(tidyr)
 library(ggplot2)
 library(Hmisc)
 library(ggthemes)
+library(readr)
 
 # Create a list of poll pages
 poll_pages <- data.frame(description = 
@@ -59,11 +60,17 @@ for (i in 1:nrow(poll_pages)){
   remDr <- remoteDriver(remoteServerAddr = "localhost", 
                         port = 4444, 
                         browserName = "firefox") # use phantom js instead
+  Sys.sleep(5)
+  
   url <- poll_pages$url_direct[i]
+  Sys.sleep(5)
+  
   remDr$open()
+  Sys.sleep(5)
+  
   remDr$navigate(url)
   message('Sleeping to let the browser load')
-  Sys.sleep(2)
+  Sys.sleep(5)
   url_source <- remDr$getPageSource()[[1]] # use phantom js instead to not have to render in browser
   
   # Get the time
@@ -78,6 +85,10 @@ for (i in 1:nrow(poll_pages)){
   
   # Combine
   the_table <- data.frame(table_content[[1]]); names(the_table) <- gsub(' ', '_', column_names)
+  
+  # Close connection
+  remDr$close()
+  
   
   # Gather
   temp <- gather(the_table, venue, value, 2:ncol(the_table))
@@ -161,3 +172,7 @@ ggplot(data = final, aes(x = label, y = roi)) +
   ggtitle('ROI for arbitrage (pre-fees)') +
   xlab('Event : Winner') +
   ylab('Percentage return on investment')
+
+# Write csv
+file_name <- Sys.time()
+write_csv(final, paste0('data/x', file_name, '.csv'))
