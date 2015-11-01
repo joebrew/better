@@ -13,7 +13,8 @@ for (i in 1:length(csvs)){
   message(paste0(i, ' of ', length(csvs)))
 }
 # Bind together all the results
-ts <- do.call('rbind', results_list); rm(temp, csvs, i, results_list)
+ts <- do.call('rbind', results_list)
+rm(temp, csvs, i, results_list)
 
 # Make a clean label
 ts$clean_label <- gsub('President16 : ', '', ts$label)
