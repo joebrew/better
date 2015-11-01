@@ -53,5 +53,7 @@ reps <- 15 * 4
 
 for (j in 1:reps){
   message(paste0('On rep # ', j, '---------------\n'))
-  get_and_write()
+  try({
+    get_and_write()
+  })
 }
