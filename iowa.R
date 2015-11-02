@@ -48,8 +48,8 @@ get_and_write <- function(sleep_time = 15){
   Sys.sleep(sleep_time * 60)
 }
 
-# Run over 15 hour period
-reps <- 15 * 4
+# Run over 60 hour period
+reps <- 60 * 4
 
 for (j in 1:reps){
   message(paste0('On rep # ', j, '---------------\n'))
