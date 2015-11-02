@@ -164,14 +164,14 @@ final$roi <- ((1 / final$purchase_cost)-1) * 100
 final$label <- paste(gsub('_', '', capitalize(final$event)), ':', final$winner) # why not working capitalize?
 final$label <- factor(final$label, levels = final$label)
 
-# Plot
-ggplot(data = final, aes(x = label, y = roi)) +
-  geom_bar(stat = 'identity', alpha = 0.6) +
-  theme_tufte() +
-  theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
-  ggtitle('ROI for arbitrage (pre-fees)') +
-  xlab('Event : Winner') +
-  ylab('Percentage return on investment')
+# # Plot
+# ggplot(data = final, aes(x = label, y = roi)) +
+#   geom_bar(stat = 'identity', alpha = 0.6) +
+#   theme_tufte() +
+#   theme(axis.text.x = element_text(angle = 90, hjust = 1)) +
+#   ggtitle('ROI for arbitrage (pre-fees)') +
+#   xlab('Event : Winner') +
+#   ylab('Percentage return on investment')
 
 # Write csv
 file_name <- Sys.time()
