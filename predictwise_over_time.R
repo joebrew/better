@@ -32,15 +32,15 @@ ggplot(data = ts[ts$event == 'president_16',],
   ylab('Black = PredictIt, Red = Betfair') +
   ggtitle('Cross-Market Arbitrage Opportunities')
 
-
-# Chart each spread
-labels <- unique(ts$label)
-for (i in 1:length(labels)){
-  temp <- ggplot(data = ts[ts$label == labels[i],],
-         aes(x = the_time, y = p)) +
-    geom_line() +
-    geom_line(aes(x = the_time, y = b), color = 'red') +
-    ggtitle(labels[i])
-  print(temp)
-}
+ 
+# # Chart each spread
+# labels <- unique(ts$label)
+# for (i in 1:length(labels)){
+#   temp <- ggplot(data = ts[ts$label == labels[i],],
+#          aes(x = the_time, y = p)) +
+#     geom_line() +
+#     geom_line(aes(x = the_time, y = b), color = 'red') +
+#     ggtitle(labels[i])
+#   print(temp)
+# }
 
