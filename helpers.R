@@ -29,11 +29,9 @@ make_df <- function(direct_url){
   remDr <- remoteDriver(remoteServerAddr = "localhost", 
                         port = 4444, 
                         browserName = "firefox") # use phantom js instead
-  # Sys.sleep(5)
-    # Sys.sleep(5)
-  
+
   remDr$open()
-  Sys.sleep(2)
+  Sys.sleep(5)
   
   remDr$navigate(direct_url)
   # message('Sleeping to let the browser load')
@@ -103,4 +101,43 @@ clean_df <- function(df, description = NULL){
   # Specify the event
   temp$event <- description
   
+  # Get rid of NA's
+  temp <- temp[!is.na(temp$p_to_b),] %>% arrange(desc(p_to_b))
+  
+  # Get the expected value of a two-way purchase
+  temp$purchase_cost <-
+    ifelse(temp$sell == 'p',
+           temp$b + (1 - temp$p),
+           ifelse(temp$sell == 'b',
+                  (1 - temp$b) + temp$p,
+                  NA))
+  
+  # Get profit
+  temp$profit <- 1 - temp$purchase_cost
+  
+  # Add in fees
+  temp$fee_p <- (1 - temp$p) * 0.1
+  temp$fee_b <- (1 - temp$b) * 0.06
+  
+  # Get adjusted profit
+  temp$adjusted_profit <- temp$profit - ((temp$fee_p + temp$fee_b) / 2)
+  
+  # Get profit range
+  temp$adjusted_profit_lwr <- temp$profit - ifelse(temp$fee_p > temp$fee_b, temp$fee_p, temp$fee_b)
+  temp$adjusted_profit_upr <- temp$profit - ifelse(temp$fee_p < temp$fee_b, temp$fee_p, temp$fee_b)
+  
+  # ROI
+  temp$roi <- ((1 / temp$purchase_cost)-1) * 100
+  
+  # Adjusted ROI
+  temp$adjusted_roi <- ((1 / (temp$purchase_cost + ((temp$fee_p + temp$fee_b) / 2)))-1) * 100
+  
+  # Adjusted ROI range
+  temp$adjusted_roi_lwr <- ((1 / (temp$purchase_cost + ifelse(temp$fee_p > temp$fee_b, 
+                                                              temp$fee_p,
+                                                              temp$fee_b)))-1) * 100
+  temp$adjusted_roi_upr <- ((1 / (temp$purchase_cost + ifelse(temp$fee_p < temp$fee_b, 
+                                                              temp$fee_p,
+                                                              temp$fee_b)))-1) * 100
+  return(temp)
 }
